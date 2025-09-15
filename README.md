@@ -5,46 +5,46 @@ Serializer.js is a focused, extensible serialization utility that produces human
 
 ---
 
-Table of contents
+## Table of contents
 
-Overview
+* Overview
 
-Installation
+* Installation
 
-Quick start
+* Quick start
 
-Primary use cases
+* Primary use cases
 
-API reference
+* API reference
 
-Constructor
+* Constructor
 
-.serialize(value[, internal])
+  - .serialize(value, internal)
 
-.describe(value)
+  - .describe(value)
 
-.escape(string)
+  - .escape(string)
 
-.configure(config)
+  - .configure(config)
 
-.replacer (add/delete/clear)
+  - .replacer (add/delete/clear)
 
 
-Configuration options (detailed)
+* Configuration options (detailed)
 
-Replacer API (examples)
+* Replacer API (examples)
 
-Best practices & safety
+* Best practices & safety
 
-Extending for host environments
+* Extending for host environments
 
-License & contribution
+* License & contribution
 
 
 
 ---
 
-Overview
+## Overview
 
 Serializer.js is not a generic persistence serializer — it is an inspection serializer. Its goals are:
 
@@ -58,14 +58,14 @@ Offer safe defaults but provide surgical control via a replacer API and runtime 
 
 ---
 
-Installation
+## Installation
 
 Clone or copy the Serializer.js file into your project.
 
 
 ---
 
-Quick start
+## Quick start
 
 const Serializer = require('./Serializer.js'); // or global.Serializer in browser
 const s = new Serializer({ deterministic: true, indent: 2 });
@@ -76,7 +76,7 @@ console.log(s.serialize(obj));
 
 ---
 
-Primary use cases
+## Primary use cases
 
 Debugging complex objects (deep, circular, or accessor-heavy).
 
@@ -88,7 +88,7 @@ Safe inspection of host objects via replacers (DOM nodes, Buffers, streams).
 
 ---
 
-API reference
+## API reference
 
 new Serializer([config])
 
@@ -120,26 +120,26 @@ An object with .add(...fns), .delete(...fns), .clear() to manage replacer functi
 
 ---
 
-Configuration options (detailed)
+## Configuration options (detailed)
 
 All defaults are conservative and safe; change them to suit your use case.
 
-depth number – Maximum recursion depth before the serializer prints a class placeholder. Default: Infinity.
+`depth`: number – Maximum recursion depth before the serializer prints a class placeholder. Default: Infinity.
 
-indent number – Spaces per level when pretty-printing. Ignored when compact: true.
+`indent`: number – Spaces per level when pretty-printing. Ignored when compact: true.
 
-deterministic boolean – When true, keys (including symbol keys) are emitted in a stable order and keys are escaped as strings.
+`deterministic`: boolean – When true, keys (including symbol keys) are emitted in a stable order and keys are escaped as strings.
 
-accessors boolean – When false (default), getter/setter properties are reported as [Getter] / [Setter] strings; when true the serializer invokes them and serializes the result (may have side effects).
+`accessors`: boolean – When false (default), getter/setter properties are reported as [Getter] / [Setter] strings; when true the serializer invokes them and serializes the result (may have side effects).
 
-maxLength number – Truncate long arrays/sets/maps/objects and append a and N more items... indicator.
+`maxLength`: number – Truncate long arrays/sets/maps/objects and append a `and N more items...` indicator.
 
-compact boolean – When true, produce a single-line compact representation.
+`compact`: boolean – When true, produce a single-line compact representation.
 
 
 Note: configure() accepts an object with the above fields. Passing a partial object leaves other options unchanged.
 
-Examples:
+### Examples:
 
 // Limit depth to 3
 const s1 = new Serializer({ depth: 3 });
@@ -160,11 +160,11 @@ console.log(s4.serialize([1, 2, 3, 4]));
 
 ---
 
-Replacer API
+## Replacer API
 
 The replacer system is intentionally powerful: replacers run before the core dispatch and may return a string which will be used as the final serialization for that value.
 
-Signature:
+### Signature:
 
 function replacer(value, context, serializer) => string | undefined
 
@@ -175,14 +175,14 @@ context: { config: {...}, internal: { ReferenceMap, CallFrame } } where Referenc
 serializer: the live Serializer instance (you may call .serialize() or .describe() from it).
 
 
-Behavior:
+### Behavior:
 
 If replacer returns a string, that string becomes the serialized output for value.
 
 If replacer returns undefined, the default serialization logic proceeds.
 
 
-Examples:
+### Examples:
 
 Serialize DOM Element as HTML
 
@@ -212,7 +212,7 @@ serializer.replacer.add((v) => {
   }
 });
 
-Caveats:
+### Caveats:
 
 Replacers receive the live serializer instance. Changing configuration inside a replacer affects the serializer globally for that instance and will impact sibling nodes unless you restore or reset config later.
 
@@ -222,7 +222,7 @@ Replacers may mutate value directly; those mutations will affect subsequent seri
 
 ---
 
-Best practices & safety
+## Best practices & safety
 
 Use a new Serializer instance for concurrent tasks to avoid races when replacers mutate configuration.
 
@@ -236,7 +236,7 @@ Limit depth / maxLength for untrusted inputs to avoid DoS-friendly deep or wide 
 
 ---
 
-Extending for host environments
+## Extending for host environments
 
 For host-specific objects (DOM nodes, Buffer, streams, platform internals), prefer a replacer rather than modifying library internals. Replacers are the supported extension point and are preserved across releases.
 
@@ -251,13 +251,13 @@ serializer.replacer.add((v) => {
 
 ---
 
-License
+## License
 
 This project is released under LGPL-3.0-or-later. The core implementation is intentionally private, and extension is expected to occur via the public replacer/configure API.
 
 
 ---
 
-Contributing
+## Contributing
 
 Contributions are welcome. Please open issues for bugs or feature requests and supply focused pull requests. Keep changes to documented public APIs backward compatible when possible.
