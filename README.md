@@ -1,4 +1,4 @@
-Serializer.js
+# Serializer.js
 
 Serializer.js is a focused, extensible serialization utility that produces human-readable string representations of JavaScript values. It targets debugging, logging, and deterministic inspection of complex runtime state while remaining small, predictable, and configurable.
 
